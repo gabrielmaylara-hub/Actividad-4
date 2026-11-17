@@ -9,7 +9,7 @@ Aplicación web para registrar una cuenta, iniciar y cerrar sesión y administra
 
 El proyecto se verificó localmente el 17 de noviembre de 2026: **112 pruebas unitarias y de rutas aprobadas, más 16 pruebas de integración con MongoDB real**. Los resultados están en `docs/evidencia-unitarias.json` y `docs/evidencia-integracion.json`. El documento Word se entrega por separado y dentro del archivo ZIP del proyecto; los requerimientos y la justificación se resumen en este repositorio.
 
-La [aplicación está publicada en Vercel Hobby](https://actividad-4-rust.vercel.app) y conectada a MongoDB Atlas Free. La [ejecución de GitHub Actions](https://github.com/gabrielmaylara-hub/Actividad-4/actions/runs/44175554053/attempts/2) aprobó las pruebas y el despliegue. El [informe de pruebas](docs/PRUEBAS.md) incluye las comprobaciones de la aplicación publicada.
+La [aplicación está publicada en Vercel Hobby](https://actividad-4-rust.vercel.app) y conectada a MongoDB Atlas Free. La [ejecución de GitHub Actions](https://github.com/gabrielmaylara-hub/Actividad-4/actions/runs/44202134425) aprobó las pruebas y el despliegue. El [informe de pruebas](docs/PRUEBAS.md) incluye las comprobaciones de la aplicación publicada.
 
 ## Funciones
 

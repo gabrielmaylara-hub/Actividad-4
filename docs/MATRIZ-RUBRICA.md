@@ -43,4 +43,4 @@ El Word puede reunir toda la explicación sin dividirla en anexos separados. Las
 
 ## Evidencia de publicación
 
-La [aplicación publicada](https://actividad-4-rust.vercel.app) se verificó con MongoDB Atlas. La [ejecución de GitHub Actions](https://github.com/gabrielmaylara-hub/Actividad-4/actions/runs/44175554053/attempts/2) registra las pruebas y el despliegue. Los casos y resultados se detallan en [PRUEBAS.md](PRUEBAS.md).
+La [aplicación publicada](https://actividad-4-rust.vercel.app) se verificó con MongoDB Atlas. La [ejecución de GitHub Actions](https://github.com/gabrielmaylara-hub/Actividad-4/actions/runs/44202134425) registra las pruebas y el despliegue. Los casos y resultados se detallan en [PRUEBAS.md](PRUEBAS.md).

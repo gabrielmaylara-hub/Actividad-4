@@ -53,6 +53,6 @@ npm run test:integration
 
 ## Verificación del despliegue
 
-La [ejecución de GitHub Actions](https://github.com/gabrielmaylara-hub/Actividad-4/actions/runs/44175554053/attempts/2) aprobó 112 pruebas unitarias y de rutas, 16 pruebas de integración con MongoDB 8 y el despliegue en Vercel.
+La [ejecución de GitHub Actions](https://github.com/gabrielmaylara-hub/Actividad-4/actions/runs/44202134425) aprobó 112 pruebas unitarias y de rutas, 16 pruebas de integración con MongoDB 8 y el despliegue en Vercel.
 
 En la [aplicación publicada](https://actividad-4-rust.vercel.app) se comprobó el registro de una cuenta de prueba, el inicio y cierre de sesión, y la creación, consulta, edición y eliminación de un producto. Al recargar la página se confirmó la persistencia de los cambios. [/api/health](https://actividad-4-rust.vercel.app/api/health) respondió HTTP 200 y confirmó la conexión a MongoDB Atlas. El catálogo devolvió HTTP 401 al consultarlo sin sesión.
