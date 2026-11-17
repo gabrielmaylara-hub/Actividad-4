@@ -17,6 +17,7 @@ async function connectDatabase() {
   const { mongodbUri } = getConfig();
   if (!mongodbUri) throw new AppError(503, 'DATABASE_UNAVAILABLE', 'La base de datos no está configurada.');
   // Una promesa compartida evita conexiones duplicadas durante el inicio serverless.
+  let phase = 'connection';
   connectionPromise = mongoose.connect(mongodbUri, {
     maxPoolSize: 5,
     serverSelectionTimeoutMS: 5000,
@@ -25,9 +26,19 @@ async function connectDatabase() {
     runtimeAdapters: { os: require('node:os') },
   }).then(async () => {
     // Los índices únicos deben existir antes de aceptar registros o SKU.
+    phase = 'indexes';
     await Promise.all([User.init(), Product.init(), Session.init()]);
     return mongoose.connection;
-  }).catch(async () => {
+  }).catch(async error => {
+    if (getConfig().production) {
+      const types = ['MongoParseError', 'MongoServerError', 'MongoNetworkError',
+        'MongoNetworkTimeoutError', 'MongoServerSelectionError', 'MongooseServerSelectionError'];
+      console.error('MongoDB initialization failed', {
+        phase,
+        type: types.includes(error?.name) ? error.name : 'Other',
+        code: Number.isInteger(error?.code) ? error.code : undefined,
+      });
+    }
     // Un fallo al crear índices no debe dejar una conexión utilizable sin unicidad.
     await mongoose.disconnect().catch(() => {});
     throw new AppError(503, 'DATABASE_UNAVAILABLE', 'No fue posible conectar con la base de datos. Intenta de nuevo más tarde.');
