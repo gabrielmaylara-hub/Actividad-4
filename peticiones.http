@@ -1,0 +1,90 @@
+# Opcional: abrir en VS Code con la extensión REST Client de Huachao Mao.
+# Ejecuta cada solicitud con Send Request, de arriba hacia abajo.
+# Conserva las cookies (rememberCookiesForSubsequentRequests=true, valor predeterminado).
+# La sesión viaja por cookie HttpOnly; no tienes que copiar el JWT.
+# Usa exclusivamente datos ficticios para este recorrido.
+@baseUrl = http://localhost:3000
+@email = prueba@example.test
+@password = Ejemplo-2026!
+
+### 1. Confirmar conexión con MongoDB (esperado 200)
+GET {{baseUrl}}/api/health
+
+### 2. Registrar cuenta (201; un correo ya registrado devuelve 409)
+POST {{baseUrl}}/api/auth/register
+Content-Type: application/json
+
+{
+  "name": "Usuario de prueba",
+  "email": "{{email}}",
+  "password": "{{password}}"
+}
+
+### 3. Iniciar sesión (200; guarda la cookie automáticamente)
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "{{email}}",
+  "password": "{{password}}"
+}
+
+### 4. Consultar usuario de la sesión (200)
+GET {{baseUrl}}/api/auth/me
+
+### 5. Crear producto (201; repetir el mismo SKU devuelve 409)
+# @name crearProducto
+POST {{baseUrl}}/api/products
+Content-Type: application/json
+
+{
+  "name": "Teclado de prueba",
+  "sku": "TEC-001",
+  "description": "Producto ficticio para verificar el CRUD.",
+  "category": "Tecnología",
+  "price": 349.90,
+  "stock": 10
+}
+
+### 6. Listar mis productos (200)
+GET {{baseUrl}}/api/products?page=1&limit=10
+
+### 7. Buscar de forma literal (200)
+GET {{baseUrl}}/api/products?q=Teclado
+
+### 8. Ver el producto creado (200)
+GET {{baseUrl}}/api/products/{{crearProducto.response.body.$.product.id}}
+
+### 9. Editar todos los campos del producto (200)
+PUT {{baseUrl}}/api/products/{{crearProducto.response.body.$.product.id}}
+Content-Type: application/json
+
+{
+  "name": "Teclado de prueba actualizado",
+  "sku": "TEC-001",
+  "description": "Descripción modificada durante la verificación.",
+  "category": "Tecnología",
+  "price": 329.50,
+  "stock": 8
+}
+
+### 10. Probar datos inválidos (400, no debe crear un producto)
+POST {{baseUrl}}/api/products
+Content-Type: application/json
+
+{
+  "name": "Producto inválido",
+  "sku": "ERROR-001",
+  "category": "Tecnología",
+  "price": -1,
+  "stock": 1.5
+}
+
+### 11. Eliminar únicamente el producto ficticio de este recorrido (204)
+DELETE {{baseUrl}}/api/products/{{crearProducto.response.body.$.product.id}}
+
+### 12. Cerrar sesión y revocarla (204)
+POST {{baseUrl}}/api/auth/logout
+
+### 13. Confirmar protección sin sesión (401)
+GET {{baseUrl}}/api/products

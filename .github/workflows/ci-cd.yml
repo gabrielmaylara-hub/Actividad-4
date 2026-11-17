@@ -1,0 +1,98 @@
+name: Pruebas y despliegue
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  tests:
+    name: Jest y MongoDB
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    services:
+      mongodb:
+        image: mongo:8
+        ports:
+          - 27017:27017
+        options: >-
+          --health-cmd "mongosh --quiet --eval 'db.adminCommand({ ping: 1 }).ok'"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      NODE_ENV: test
+      APP_ORIGIN: http://localhost:3000
+      MONGODB_URI: mongodb://127.0.0.1:27017/actividad4_ci_test
+      TEST_MONGODB_URI: mongodb://127.0.0.1:27017/actividad4_ci_test
+      # CI usa el servicio MongoDB anterior, sin descargar otro binario al instalar.
+      MONGOMS_DISABLE_POSTINSTALL: '1'
+      # Valor exclusivo del entorno desechable de pruebas; nunca usar en produccion.
+      JWT_SECRET: ci-only-actividad4-test-secret-not-for-production-2026
+    steps:
+      - name: Obtener codigo
+        uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
+      - name: Configurar Node.js 24
+        uses: actions/setup-node@v7.1.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - name: Instalar dependencias del archivo de bloqueo
+        run: npm ci
+      - name: Probar controladores y rutas con cobertura
+        run: npm run test:ci
+      - name: Probar integracion con MongoDB
+        run: npm run test:integration
+
+  deploy:
+    name: Publicar en Vercel
+    needs: tests
+    if: >-
+      vars.DEPLOY_ENABLED == 'true' &&
+      github.ref == 'refs/heads/main' &&
+      (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+      MONGOMS_DISABLE_POSTINSTALL: '1'
+    steps:
+      - name: Obtener codigo probado
+        uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
+      - name: Configurar Node.js 24
+        uses: actions/setup-node@v7.1.0
+        with:
+          node-version-file: .nvmrc
+          package-manager-cache: false
+      - name: Comprobar configuracion de despliegue
+        shell: bash
+        run: |
+          if [ -z "$VERCEL_TOKEN" ] || [ -z "$VERCEL_ORG_ID" ] || [ -z "$VERCEL_PROJECT_ID" ]; then
+            echo "Faltan secretos de Vercel en la configuracion de GitHub Actions." >&2
+            exit 1
+          fi
+      - name: Instalar dependencias
+        run: npm ci
+      - name: Instalar version fija de Vercel CLI
+        run: npm install --global vercel@65.17.0
+      - name: Obtener configuracion de produccion
+        run: vercel pull --yes --environment=production --token="$VERCEL_TOKEN"
+      - name: Construir para produccion
+        run: vercel build --prod --token="$VERCEL_TOKEN"
+      - name: Desplegar el resultado construido
+        run: vercel deploy --prebuilt --prod --token="$VERCEL_TOKEN"

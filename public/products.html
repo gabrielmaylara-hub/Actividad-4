@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#112b3c">
+  <meta name="description" content="Consulta, registra y actualiza tu catálogo de productos.">
+  <title>Mi catálogo | Productos</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/css/app.css">
+  <script src="/js/common.js" defer></script>
+  <script src="/js/products.js" defer></script>
+</head>
+<body class="catalog-page">
+  <a class="skip-link" href="#main-content">Saltar al contenido</a>
+  <header class="app-header">
+    <div class="header-inner">
+      <a class="brand brand-light" href="/products.html" aria-label="Productos, mi catálogo">
+        <svg class="brand-icon" viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="m16 3 12 6.5v13L16 29 4 22.5v-13L16 3Z" stroke="currentColor" stroke-width="2"/><path d="m4 9.5 12 7 12-7M16 16.5V29M10 6.5l12 7V19" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+        <span>Productos</span>
+      </a>
+      <div class="account-menu" id="account-menu" hidden>
+        <div class="user-identity"><span class="avatar" id="user-avatar" aria-hidden="true"></span><span id="user-name"></span></div>
+        <button class="button button-header" id="logout-button" type="button">Cerrar sesión</button>
+      </div>
+    </div>
+  </header>
+
+  <main id="main-content" class="catalog-main">
+    <p id="session-status" class="session-status" role="status">Verificando tu sesión…</p>
+    <div id="catalog-content" hidden>
+      <div class="page-heading">
+        <div><p class="eyebrow">MI ESPACIO</p><h1>Catálogo de productos</h1><p class="muted">Administra la información, los precios y las existencias de tus productos.</p></div>
+        <button class="button button-primary" id="new-product-button" type="button"><span class="plus-icon" aria-hidden="true">+</span> Nuevo producto</button>
+      </div>
+
+      <div id="page-feedback" class="feedback" role="status" tabindex="-1" hidden></div>
+
+      <section class="catalog-section" aria-label="Productos registrados">
+        <form id="filter-form" class="filter-form" role="search">
+          <div class="field search-field"><label for="search">Buscar producto</label><div class="search-control"><svg viewBox="0 0 20 20" aria-hidden="true" fill="none"><circle cx="8.5" cy="8.5" r="5.5" stroke="currentColor" stroke-width="1.8"/><path d="m13 13 4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><input id="search" name="q" type="search" maxlength="100" placeholder="Nombre o código SKU" autocomplete="off"></div></div>
+          <div class="field filter-category"><label for="category-filter">Categoría</label><select id="category-filter" name="category"><option value="">Todas las categorías</option><option>Tecnología</option><option>Oficina</option><option>Hogar</option><option>Otros</option></select></div>
+          <div class="filter-actions"><button class="button button-secondary" type="submit">Buscar</button><button class="button button-text" id="clear-filters-button" type="button" hidden>Limpiar</button></div>
+        </form>
+
+        <div class="list-heading"><h2>Mis productos <span id="total-count" class="count-label"></span></h2><p id="list-status" class="muted" role="status" aria-live="polite"></p></div>
+
+        <div id="products-region" aria-busy="false">
+          <div class="table-wrap" id="table-wrap" hidden>
+            <table class="products-table">
+              <caption class="sr-only">Productos de tu cuenta. Los precios se muestran en pesos mexicanos.</caption>
+              <thead><tr><th scope="col">Producto</th><th scope="col">SKU</th><th scope="col">Categoría</th><th scope="col" class="number-cell">Precio MXN</th><th scope="col" class="stock-cell">Existencias</th><th scope="col" class="actions-heading">Acciones</th></tr></thead>
+              <tbody id="products-body"></tbody>
+            </table>
+          </div>
+          <div class="empty-state" id="empty-state" hidden>
+            <svg class="empty-icon" viewBox="0 0 56 56" fill="none" aria-hidden="true"><path d="m28 7 20 11v21L28 50 8 39V18L28 7Z" stroke="currentColor" stroke-width="1.5"/><path d="m8 18 20 11 20-11M28 29v21M18 12.5l20 11V33" stroke="currentColor" stroke-width="1.5"/></svg>
+            <h3 id="empty-title">Tu catálogo está listo para empezar</h3>
+            <p id="empty-description">Agrega tu primer producto para guardar su precio y sus existencias.</p>
+            <button class="button button-secondary" id="empty-add-button" type="button">Agregar un producto</button>
+          </div>
+          <div class="list-error" id="list-error" hidden><h3>No pudimos consultar tus productos</h3><p id="list-error-message"></p><button class="button button-secondary" id="retry-button" type="button">Volver a intentar</button></div>
+        </div>
+
+        <div class="pagination" id="pagination" hidden>
+          <p id="pagination-description"></p><div class="pagination-buttons"><button class="button button-small button-secondary" id="previous-page" type="button">Anterior</button><span id="page-number" aria-live="polite"></span><button class="button button-small button-secondary" id="next-page" type="button">Siguiente</button></div>
+        </div>
+      </section>
+      <p class="catalog-footnote">Precios en pesos mexicanos (MXN). Solo tú puedes acceder a los productos de tu cuenta.</p>
+    </div>
+    <noscript><p class="feedback feedback-error">Activa JavaScript en tu navegador para utilizar el catálogo.</p></noscript>
+  </main>
+
+  <dialog id="product-dialog" class="modal" aria-labelledby="product-dialog-title">
+    <div class="modal-header"><div><p class="eyebrow">CATÁLOGO</p><h2 id="product-dialog-title">Nuevo producto</h2></div><button class="icon-button modal-close" type="button" data-close="product-dialog" aria-label="Cerrar formulario">×</button></div>
+    <p class="modal-description">Completa los datos del producto. La descripción es opcional.</p>
+    <div id="product-feedback" class="feedback" role="alert" tabindex="-1" hidden></div>
+    <form id="product-form">
+      <div class="field"><label for="product-name">Nombre del producto</label><input id="product-name" name="name" type="text" minlength="2" maxlength="100" required autocomplete="off"></div>
+      <div class="field-grid"><div class="field"><label for="product-sku">Código SKU</label><input id="product-sku" name="sku" type="text" minlength="2" maxlength="40" pattern="[A-Za-z0-9\-]+" required autocomplete="off" aria-describedby="sku-help"><p class="field-help" id="sku-help">Letras, números y guiones. Único en tu catálogo.</p></div><div class="field"><label for="product-category">Categoría</label><select id="product-category" name="category" required><option value="">Selecciona una categoría</option><option>Tecnología</option><option>Oficina</option><option>Hogar</option><option>Otros</option></select></div></div>
+      <div class="field-grid"><div class="field"><label for="product-price">Precio en MXN</label><div class="amount-control"><span aria-hidden="true">$</span><input id="product-price" name="price" type="number" min="0" max="9999999.99" step="0.01" inputmode="decimal" required></div></div><div class="field"><label for="product-stock">Existencias</label><input id="product-stock" name="stock" type="number" min="0" max="999999" step="1" inputmode="numeric" required></div></div>
+      <div class="field"><label for="product-description">Descripción <span class="optional">(opcional)</span></label><textarea id="product-description" name="description" maxlength="500" rows="3" aria-describedby="description-count"></textarea><p class="field-help description-count" id="description-count">0 / 500 caracteres</p></div>
+      <div class="modal-actions"><button class="button button-secondary" type="button" data-close="product-dialog">Cancelar</button><button class="button button-primary" id="save-product-button" type="submit">Guardar producto</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="detail-dialog" class="modal" aria-labelledby="detail-title">
+    <div class="modal-header"><div><p class="eyebrow">DETALLE DEL PRODUCTO</p><h2 id="detail-title"></h2></div><button class="icon-button modal-close" type="button" data-close="detail-dialog" aria-label="Cerrar detalle">×</button></div>
+    <dl id="product-details" class="product-details"></dl>
+    <div class="modal-actions"><button class="button button-secondary" type="button" data-close="detail-dialog">Cerrar</button><button class="button button-primary" id="edit-detail-button" type="button">Editar producto</button></div>
+  </dialog>
+
+  <dialog id="delete-dialog" class="modal modal-small" aria-labelledby="delete-title">
+    <div class="modal-header"><h2 id="delete-title">Eliminar producto</h2><button class="icon-button modal-close" type="button" data-close="delete-dialog" aria-label="Cancelar eliminación">×</button></div>
+    <p>Se eliminará <strong id="delete-product-name"></strong> de tu catálogo.</p>
+    <p class="muted">Esta acción no se puede deshacer.</p>
+    <div id="delete-feedback" class="feedback" role="alert" tabindex="-1" hidden></div>
+    <div class="modal-actions"><button class="button button-secondary" type="button" data-close="delete-dialog" autofocus>Cancelar</button><button class="button button-danger" id="confirm-delete-button" type="button">Eliminar producto</button></div>
+  </dialog>
+</body>
+</html>
