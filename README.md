@@ -9,7 +9,7 @@ Aplicación web para registrar una cuenta, iniciar y cerrar sesión y administra
 
 El proyecto se verificó localmente el 17 de noviembre de 2026: **112 pruebas unitarias y de rutas aprobadas, más 16 pruebas de integración con MongoDB real**. Los resultados están en `docs/evidencia-unitarias.json` y `docs/evidencia-integracion.json`. El documento Word se entrega por separado y dentro del archivo ZIP del proyecto; los requerimientos y la justificación se resumen en este repositorio.
 
-El proyecto está publicado en GitHub; la conexión a MongoDB Atlas y el despliegue en Vercel siguen pendientes de configuración de las cuentas. La guía [DESPLIEGUE.md](docs/DESPLIEGUE.md) describe esos pasos. La ejecución de GitHub Actions y el recorrido de la interfaz publicada deben comprobarse antes de entregar la actividad.
+La [aplicación está publicada en Vercel Hobby](https://actividad-4-rust.vercel.app) y conectada a MongoDB Atlas Free. La [ejecución de GitHub Actions](https://github.com/gabrielmaylara-hub/Actividad-4/actions/runs/44175554053/attempts/2) aprobó las pruebas y el despliegue. El [informe de pruebas](docs/PRUEBAS.md) incluye las comprobaciones de la aplicación publicada.
 
 ## Funciones
 
@@ -161,7 +161,7 @@ npm run test:integration
 Remove-Item Env:TEST_MONGODB_URI
 ```
 
-Usa únicamente una base destinada a pruebas: la suite de integración crea y limpia sus propios registros. Las pruebas unitarias y de integración local no sustituyen la comprobación de Atlas ni de la aplicación publicada. Los casos se detallan en [PRUEBAS.md](docs/PRUEBAS.md).
+Usa una base destinada a pruebas porque la suite de integración crea y limpia sus propios registros. El [informe de pruebas](docs/PRUEBAS.md) reúne los casos y resultados de las pruebas locales, GitHub Actions y la aplicación publicada.
 
 ## Organización del proyecto
 
@@ -182,7 +182,7 @@ Usa únicamente una base destinada a pruebas: la suite de integración crea y li
 
 Se eligió Vercel para alojar Express y los archivos estáticos en un mismo proyecto, y MongoDB Atlas para conservar los datos. La documentación oficial permite exportar la aplicación desde `src/app.js` y servir los archivos de `public/`. GitHub Actions ejecuta las pruebas antes del trabajo de publicación. Véanse [Express en Vercel](https://vercel.com/docs/frameworks/backend/express) e [integración con GitHub Actions](https://vercel.com/kb/guide/how-can-i-use-github-actions-with-vercel).
 
-El workflow prueba las solicitudes de cambio hacia `main` y los cambios enviados a esa rama. El despliegue solo se activa cuando `DEPLOY_ENABLED` vale `true`, los secretos están configurados y las pruebas finalizan correctamente. Mientras falten las cuentas, el trabajo de publicación se omite; esto no representa un despliegue realizado.
+El workflow prueba las solicitudes de cambio hacia `main` y los cambios enviados a esa rama. El despliegue se ejecuta desde `main` cuando `DEPLOY_ENABLED` vale `true`, los secretos están configurados y las pruebas finalizan correctamente.
 
 La entrega académica requiere ZIP o RAR, el Word con los elementos solicitados y la URL del repositorio. El repositorio debe incluir el código, las pruebas, el workflow y las instrucciones. La aplicación desplegada debe poder verificarse. La [matriz de la rúbrica](docs/MATRIZ-RUBRICA.md) ayuda a revisar esos elementos. No se exige un video en las instrucciones recibidas.
 

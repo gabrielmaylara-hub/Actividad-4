@@ -41,6 +41,6 @@ La tarjeta de login muestra el envío de JWT por encabezado como solución de ej
 
 El Word puede reunir toda la explicación sin dividirla en anexos separados. Las instrucciones no fijan un límite de páginas, una cantidad de pruebas ni un porcentaje mínimo de cobertura. Tampoco exigen un video.
 
-## Pendientes que impiden considerar cerrada la entrega
+## Evidencia de publicación
 
-La configuración remota, sus enlaces y la revisión manual del estudiante deben completarse y comprobarse. Un workflow preparado que omita la publicación por `DEPLOY_ENABLED` ausente no cumple todavía el criterio de despliegue. Actualiza el Word y el README con las evidencias reales cuando estos pasos estén terminados.
+La [aplicación publicada](https://actividad-4-rust.vercel.app) se verificó con MongoDB Atlas. La [ejecución de GitHub Actions](https://github.com/gabrielmaylara-hub/Actividad-4/actions/runs/44175554053/attempts/2) registra las pruebas y el despliegue. Los casos y resultados se detallan en [PRUEBAS.md](PRUEBAS.md).
