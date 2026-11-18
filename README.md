@@ -33,7 +33,7 @@ npm run dev:demo
 
 Abre [http://localhost:3000](http://localhost:3000). Este modo inicia un servidor MongoDB local temporal y genera una clave JWT para la sesión de laboratorio. No requiere configurar una cuenta Atlas; puede descargar el binario de MongoDB la primera vez.
 
-Los usuarios y productos de este modo se pierden al detenerlo. Úsalo para conocer el funcionamiento de la interfaz. La ejecución con datos persistentes se configura a continuación; Atlas y el despliegue remoto siguen siendo necesarios para completar la actividad.
+En el modo local, los usuarios y productos se pierden al cerrar la aplicación. La [versión publicada en Vercel](https://actividad-4-rust.vercel.app) guarda los datos en MongoDB Atlas.
 
 ## Ejecutar en Windows con PowerShell
 
